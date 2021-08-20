@@ -3,6 +3,7 @@ import User from './user.entity';
 import RepoService from 'src/services/repo.service';
 import { CreateUserDTO } from './user.dto';
 import { classToClass } from 'class-transformer';
+import { Like } from 'typeorm';
 
 @Injectable()
 export class UserService {
@@ -15,6 +16,7 @@ export class UserService {
   async findAll(): Promise<User[]> {
     const users = await this.repoService.userRepo.find({
       relations: ['knowledges'],
+      order: { name: 'ASC' },
     });
 
     return classToClass(users);
@@ -58,7 +60,7 @@ export class UserService {
 
     const userCreated = await this.repoService.userRepo.save(user);
 
-    return userCreated;
+    return classToClass(userCreated);
   }
 
   async validate(isValidate: boolean, id: number): Promise<User> {
@@ -72,5 +74,29 @@ export class UserService {
     user.validated_at = new Date();
 
     return this.repoService.userRepo.save(user);
+  }
+
+  async search(searchValue: string): Promise<User[] | undefined> {
+    const users = await this.repoService.userRepo.find({
+      relations: ['knowledges'],
+      where: [
+        {
+          name: Like(`${searchValue}%`),
+        },
+        {
+          cpf: Like(`${searchValue}%`),
+        },
+        {
+          email: Like(`${searchValue}%`),
+        },
+        {
+          phone: Like(`${searchValue}%`),
+        },
+      ],
+    });
+
+    console.log(users[0].knowledges);
+
+    return classToClass(users);
   }
 }

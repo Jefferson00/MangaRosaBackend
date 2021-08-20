@@ -41,4 +41,12 @@ export class UserController {
   ): Promise<User> {
     return this.userService.validate(body.isValidate, id);
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('/user/search')
+  async searchInUser(
+    @Body() body: { searchValue: string },
+  ): Promise<User[] | undefined> {
+    return this.userService.search(body.searchValue);
+  }
 }
