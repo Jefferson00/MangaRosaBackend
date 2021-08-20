@@ -38,9 +38,10 @@ export class UserService {
       name: createUserData.name,
       email: createUserData.email,
       cpf: createUserData.cpf,
-      isValidated: false,
+      is_validated: false,
       phone: createUserData.phone,
       knowledges: createUserData.knowledges,
+      validated_at: null,
     });
 
     const checkAllKnowledges = createUserData.knowledges.map(
@@ -57,19 +58,19 @@ export class UserService {
 
     const userCreated = await this.repoService.userRepo.save(user);
 
-    /*const saveUserKnowledges = createUserData.knowledges.map(
-      async (knowledge) => {
-        const userKnowledge = this.repoService.userKnowledgeRepo.create({
-          knowledges_id: knowledge.id,
-          users_id: userCreated.id,
-        });
-
-        await this.repoService.userKnowledgeRepo.save(userKnowledge);
-      },
-    );
-
-    await Promise.all(saveUserKnowledges);*/
-
     return userCreated;
+  }
+
+  async validate(isValidate: boolean, id: number): Promise<User> {
+    const user = await this.repoService.userRepo.findOne(id);
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    user.is_validated = isValidate;
+    user.validated_at = new Date();
+
+    return this.repoService.userRepo.save(user);
   }
 }

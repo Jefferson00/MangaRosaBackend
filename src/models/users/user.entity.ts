@@ -28,7 +28,7 @@ class User {
   phone: string;
 
   @Column()
-  isValidated: boolean;
+  is_validated: boolean;
 
   @ManyToMany(() => Knowledges)
   @JoinTable()
@@ -38,6 +38,9 @@ class User {
   getKnowledges(): Knowledges[] {
     return this.knowledges;
   }
+
+  @Column()
+  validated_at: Date | null;
 
   @CreateDateColumn()
   created_at: Date;
