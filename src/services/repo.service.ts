@@ -3,6 +3,7 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import User from '../models/users/user.entity';
 import Knowledges from '../models/knowledges/knowledges.entity';
+import Admin from 'src/models/auth/admin.entity';
 
 @Injectable()
 class RepoService {
@@ -10,6 +11,7 @@ class RepoService {
     @InjectRepository(User) public readonly userRepo: Repository<User>,
     @InjectRepository(Knowledges)
     public readonly knowledgeRepo: Repository<Knowledges>,
+    @InjectRepository(Admin) public readonly adminRepo: Repository<Admin>,
   ) {}
 }
 
