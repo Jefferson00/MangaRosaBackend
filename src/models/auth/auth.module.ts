@@ -1,13 +1,15 @@
 /* eslint-disable prettier/prettier */
-import { AuthController } from './auth.controller';
 import { Module } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import RepoModule from '../repo.module';
-import { JwtStrategy } from './jwt.strategy';
+
+import { JwtStrategy } from './shared/jwt.strategy';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
-import { jwtConstants } from './constants';
-import { LocalStrategy } from './local.strategy';
+
+import RepoModule from '../../repositories/repo.module';
+import { AuthController } from './auth.controller';
+import { AuthService } from './auth.service';
+import { jwtConstants } from './constant/constants';
+import { LocalStrategy } from './shared/local.strategy';
 
 @Module({
     imports: [
@@ -15,7 +17,7 @@ import { LocalStrategy } from './local.strategy';
         PassportModule,
         JwtModule.register({
             secret: jwtConstants.secret,
-            signOptions: { expiresIn: '8000s' },
+            signOptions: { expiresIn: '36000s' },
         }),
     ],
     controllers: [AuthController],

@@ -1,9 +1,10 @@
 /* eslint-disable prettier/prettier */
-import { Injectable } from '@nestjs/common';
-import RepoService from 'src/services/repo.service';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+
+import RepoService from '../../repositories/repo.service';
 
 import { compare } from 'bcryptjs';
-import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
@@ -18,13 +19,19 @@ export class AuthService {
     });
 
     if (!admin) {
-      throw new Error('Incorrect name or password');
+      throw new HttpException({
+        status: HttpStatus.BAD_REQUEST,
+        error: 'Incorrect name or password',
+      }, HttpStatus.BAD_REQUEST);
     }
 
     const passwordMatched = await compare(password, admin.password);
 
     if (!passwordMatched) {
-      throw new Error('Incorrect name or password');
+      throw new HttpException({
+        status: HttpStatus.BAD_REQUEST,
+        error: 'Incorrect name or password',
+      }, HttpStatus.BAD_REQUEST);
     }
 
     return { id: admin.id, name: admin.name };

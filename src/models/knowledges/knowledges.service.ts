@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
-import RepoService from '../../services/repo.service';
-import Knowledges from './knowledges.entity';
+import RepoService from '../../repositories/repo.service';
+import Knowledges from './entity/knowledges.entity';
 
 @Injectable()
 export class KnowledgeService {
