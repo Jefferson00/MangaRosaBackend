@@ -1,7 +1,9 @@
-import { Injectable } from '@nestjs/common';
-import User from './user.entity';
-import RepoService from 'src/services/repo.service';
-import { CreateUserDTO } from './user.dto';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+
+import User from './entity/user.entity';
+import RepoService from '../../repositories/repo.service';
+import { CreateUserDTO } from './dtos/user.dto';
+
 import { classToClass } from 'class-transformer';
 import { Like } from 'typeorm';
 
@@ -36,6 +38,22 @@ export class UserService {
    * @returns User created
    */
   async create(createUserData: CreateUserDTO): Promise<User> {
+    const findUserWithSameCpf = await this.repoService.userRepo.findOne({
+      where: {
+        cpf: createUserData.cpf,
+      },
+    });
+
+    if (findUserWithSameCpf) {
+      throw new HttpException(
+        {
+          status: HttpStatus.BAD_REQUEST,
+          error: 'CPF is already registered',
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const user = this.repoService.userRepo.create({
       name: createUserData.name,
       email: createUserData.email,
@@ -51,7 +69,13 @@ export class UserService {
         const res = await this.repoService.knowledgeRepo.findOne(knowledge.id);
 
         if (!res) {
-          throw new Error('Some of knowledges informed is invalid.');
+          throw new HttpException(
+            {
+              status: HttpStatus.BAD_REQUEST,
+              error: 'Some of knowledges informed is invalid',
+            },
+            HttpStatus.BAD_REQUEST,
+          );
         }
       },
     );
@@ -63,19 +87,40 @@ export class UserService {
     return classToClass(userCreated);
   }
 
+  /**
+   * Update is_validated boolean value and set a date for validated_at
+   * @param isValidate boolean
+   * @param id number
+   * @returns User
+   */
   async validate(isValidate: boolean, id: number): Promise<User> {
-    const user = await this.repoService.userRepo.findOne(id);
+    const user = await this.repoService.userRepo.findOne(id, {
+      relations: ['knowledges'],
+    });
 
     if (!user) {
-      throw new Error('User not found');
+      throw new HttpException(
+        {
+          status: HttpStatus.BAD_REQUEST,
+          error: 'User not found',
+        },
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
     user.is_validated = isValidate;
     user.validated_at = new Date();
 
-    return this.repoService.userRepo.save(user);
+    const userValidated = this.repoService.userRepo.save(user);
+
+    return userValidated;
   }
 
+  /**
+   * Search in user table for values that start with the informed value
+   * @param searchValue string
+   * @returns User[] | undefined
+   */
   async search(searchValue: string): Promise<User[] | undefined> {
     const users = await this.repoService.userRepo.find({
       relations: ['knowledges'],
@@ -94,8 +139,6 @@ export class UserService {
         },
       ],
     });
-
-    console.log(users[0].knowledges);
 
     return classToClass(users);
   }

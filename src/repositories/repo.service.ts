@@ -1,9 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import User from '../models/users/user.entity';
-import Knowledges from '../models/knowledges/knowledges.entity';
-import Admin from 'src/models/auth/admin.entity';
+
+import { Repository } from 'typeorm';
+
+import User from '../models/users/entity/user.entity';
+import Knowledges from '../models/knowledges/entity/knowledges.entity';
+import Admin from '../models/auth/entity/admin.entity';
 
 @Injectable()
 class RepoService {

@@ -7,10 +7,10 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
-import User from './user.entity';
-import { CreateUserDTO } from './user.dto';
+import User from './entity/user.entity';
+import { CreateUserDTO } from './dtos/user.dto';
 import { UserService } from './user.service';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/shared/jwt-auth.guard';
 
 @Controller()
 export class UserController {
@@ -28,13 +28,13 @@ export class UserController {
     return this.userService.find(id);
   }
 
-  @Post('/user/create')
+  @Post('/users/create')
   async createUser(@Body() body: CreateUserDTO): Promise<User> {
     return this.userService.create(body);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Put('/user/validate/:id')
+  @Put('/users/validate/:id')
   async validateUser(
     @Body() body: { isValidate: boolean },
     @Param() id: number,
@@ -43,7 +43,7 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('/user/search')
+  @Post('/users/search')
   async searchInUser(
     @Body() body: { searchValue: string },
   ): Promise<User[] | undefined> {

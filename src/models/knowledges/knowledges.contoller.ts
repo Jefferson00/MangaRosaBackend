@@ -1,6 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
 
-import Knowledges from './knowledges.entity';
+import Knowledges from './entity/knowledges.entity';
 import { KnowledgeService } from './knowledges.service';
 
 @Controller()

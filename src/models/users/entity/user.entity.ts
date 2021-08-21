@@ -8,7 +8,7 @@ import {
   ManyToMany,
   JoinTable,
 } from 'typeorm';
-import Knowledges from '../knowledges/knowledges.entity';
+import Knowledges from '../../knowledges/entity/knowledges.entity';
 
 @Entity('users')
 class User {

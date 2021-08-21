@@ -8,7 +8,7 @@ import {
 
 @Entity('knowledges')
 class Knowledges {
-  @PrimaryGeneratedColumn() //
+  @PrimaryGeneratedColumn()
   id: number;
 
   @Column()

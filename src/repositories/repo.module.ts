@@ -1,9 +1,10 @@
 import { Global, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import RepoService from '../services/repo.service';
-import Admin from './auth/admin.entity';
-import Knowledges from './knowledges/knowledges.entity';
-import User from './users/user.entity';
+
+import RepoService from './repo.service';
+import Admin from '../models/auth/entity/admin.entity';
+import Knowledges from '../models/knowledges/entity/knowledges.entity';
+import User from '../models/users/entity/user.entity';
 
 @Global()
 @Module({
