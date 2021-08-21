@@ -41,6 +41,11 @@ $ cd mangarosabackend
 # Install dependencies
 $ yarn install or npm install
 
+# Create the .env file with
+$ ADMIN_PASSWORD=
+$ SECRET_JWT=
+$ PORT=3333
+
 #Run Migrations
 $ yarn typeorm migration:run
 
