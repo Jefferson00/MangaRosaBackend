@@ -41,7 +41,8 @@ export class CreateAdmin1629422676658 implements MigrationInterface {
 
         );
 
-        const hashedPassword = await hash('admin', 8);
+        const adminPassword = process.env.ADMIN_PASSWORD
+        const hashedPassword = await hash(adminPassword, 8);
 
         await queryRunner.manager.createQueryBuilder()
             .insert()

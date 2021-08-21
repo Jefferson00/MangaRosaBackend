@@ -1,3 +1,4 @@
+console.log(process.env.SECRET_JWT);
 export const jwtConstants = {
-  secret: '904383fb5856e77080913dfff226e858',
+  secret: process.env.SECRET_JWT,
 };

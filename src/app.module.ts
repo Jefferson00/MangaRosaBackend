@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import RepoModule from './repositories/repo.module';
@@ -10,7 +11,14 @@ import { KnowledgeController } from './models/knowledges/knowledges.contoller';
 import { KnowledgeService } from './models/knowledges/knowledges.service';
 
 @Module({
-  imports: [AuthModule, TypeOrmModule.forRoot(), RepoModule],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    AuthModule,
+    TypeOrmModule.forRoot(),
+    RepoModule,
+  ],
   controllers: [UserController, KnowledgeController],
   providers: [UserService, KnowledgeService],
 })
